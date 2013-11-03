@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD})
 public @interface TestGroup {
   String key() default "testgroup";
-  String[] value();
+  String[] value() default "defaultGroup";
 }
