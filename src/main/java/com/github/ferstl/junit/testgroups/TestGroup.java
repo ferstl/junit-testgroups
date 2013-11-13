@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Inherited
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.PACKAGE, ElementType.TYPE})
 public @interface TestGroup {
   String key() default "testgroup";
   String[] value() default "defaultGroup";
