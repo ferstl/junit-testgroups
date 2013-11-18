@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -17,20 +16,41 @@ public class TestGroupRule implements TestRule {
     TestGroup testGroup = description.getAnnotation(TestGroup.class);
 
     String key = testGroup.key();
-    Collection<String> testGroups = new HashSet<>(Arrays.asList(testGroup.value()));
+    Collection<String> enabledGroups = getEnabledTestGroups(key);
+    Collection<String> declaredGroups = getDeclaredTestGroups(testGroup);
 
-    Collection<String> enabledGroups = split(System.getProperty(key));
-    if (enabledGroups.isEmpty() || isGroupDefined(enabledGroups, testGroups)) {
+    if (isGroupEnabled(enabledGroups, declaredGroups)) {
       return base;
     }
 
-    return new SkipStatement(enabledGroups, testGroups);
+    return new SkipStatement(enabledGroups, declaredGroups);
   }
 
 
-  static boolean isGroupDefined(Collection<String> definedGroups, Collection<String> testGroups) {
-    for (String definedGroup : definedGroups) {
-      if (testGroups.contains(definedGroup)) { return true; }
+  static Collection<String> getEnabledTestGroups(String key) {
+    Collection<String> enabledGroups = split(System.getProperty(key));
+    if (enabledGroups.isEmpty()) {
+      enabledGroups = Collections.singletonList(TestGroup.DEFAULT_GROUP);
+    }
+    return enabledGroups;
+  }
+
+
+  static Collection<String> getDeclaredTestGroups(TestGroup testGroup) {
+    String[] declaredGroups = testGroup.value();
+    if (declaredGroups.length != 0) {
+      return new HashSet<>(Arrays.asList(declaredGroups));
+    }
+
+    return Collections.singletonList(TestGroup.DEFAULT_GROUP);
+  }
+
+
+  static boolean isGroupEnabled(Collection<String> enabledGroups, Collection<String> declaredGroups) {
+    for (String enabledGroup : enabledGroups) {
+      if (declaredGroups.contains(enabledGroup)) {
+        return true;
+      }
     }
 
     return false;
