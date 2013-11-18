@@ -1,18 +1,90 @@
 package com.github.ferstl.junit.testgroups;
 
+import java.util.Arrays;
 import java.util.Collection;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.internal.AssumptionViolatedException;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+
+import com.github.ferstl.junit.testgroups.TestGroupRule.SkipStatement;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * JUnit tests for {@link TestGroupRule}.
  */
 public class TestGroupRuleTest {
+
+  @Rule
+  public ExpectedException expEx = ExpectedException.none();
+
+  private TestGroupRule rule;
+  private Statement statement;
+  private TestGroup testGroup;
+  private Description description;
+
+  @Before
+  public void before() {
+    this.rule = new TestGroupRule();
+    this.statement = mock(Statement.class);
+    this.testGroup = mock(TestGroup.class);
+    when(this.testGroup.key()).thenReturn(TestGroup.DEFAULT_KEY);
+    when(this.testGroup.value()).thenReturn(new String[] {TestGroup.DEFAULT_GROUP});
+    this.description = mock(Description.class);
+    when(this.description.getAnnotation(TestGroup.class)).thenReturn(this.testGroup);
+  }
+
+  @After
+  public void after() {
+    System.clearProperty(TestGroup.DEFAULT_KEY);
+  }
+
+  @Test
+  public void defaultGroup() {
+    assertEquals(this.statement, this.rule.apply(this.statement, this.description));
+  }
+
+  @Test
+  public void singleMatchingGroup() {
+    when(this.testGroup.value()).thenReturn(new String[] {"customGroup"});
+    System.setProperty(TestGroup.DEFAULT_KEY, "customGroup");
+
+    assertEquals(this.statement, this.rule.apply(this.statement, this.description));
+  }
+
+  @Test
+  public void nonMatchingGroup() {
+    System.setProperty(TestGroup.DEFAULT_KEY, "customGroup");
+
+    assertThat(this.rule.apply(this.statement, this.description), instanceOf(SkipStatement.class));
+  }
+
+  @Test
+  public void skipStatement() throws Throwable {
+    SkipStatement skipStatement = new SkipStatement(Arrays.asList("foo", "bar"), Arrays.asList("baz", "blub"));
+
+    this.expEx.expect(AssumptionViolatedException.class);
+    this.expEx.expectMessage(containsString("foo"));
+    this.expEx.expectMessage(containsString("bar"));
+    this.expEx.expectMessage(containsString("baz"));
+    this.expEx.expectMessage(containsString("blub"));
+
+    skipStatement.evaluate();
+  }
 
   @Test
   public void splitMultiple() {
