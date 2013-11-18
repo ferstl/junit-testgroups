@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 public @interface TestGroup {
   static final String DEFAULT_KEY = "testgroup";
-  static final String DEFAULT_GROUP = "defaultGroup";
+  static final String DEFAULT_GROUP = "default";
 
   String key() default DEFAULT_KEY;
   String[] value() default DEFAULT_GROUP;
