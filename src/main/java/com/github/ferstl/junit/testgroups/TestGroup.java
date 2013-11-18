@@ -12,6 +12,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 public @interface TestGroup {
-  String key() default "testgroup";
-  String[] value() default "defaultGroup";
+  static final String DEFAULT_KEY = "testgroup";
+  static final String DEFAULT_GROUP = "defaultGroup";
+
+  String key() default DEFAULT_KEY;
+  String[] value() default DEFAULT_GROUP;
 }
