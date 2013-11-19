@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -14,6 +15,10 @@ public class TestGroupRule implements TestRule {
   @Override
   public Statement apply(Statement base, Description description) {
     TestGroup testGroup = description.getAnnotation(TestGroup.class);
+
+    if (testGroup == null) {
+      throw new IllegalStateException("Test " + description.getDisplayName() + " is not in a test group.");
+    }
 
     String key = testGroup.key();
     Collection<String> enabledGroups = getEnabledTestGroups(key);
@@ -28,10 +33,8 @@ public class TestGroupRule implements TestRule {
 
 
   static Collection<String> getEnabledTestGroups(String key) {
-    Collection<String> enabledGroups = split(System.getProperty(key));
-    if (enabledGroups.isEmpty()) {
-      enabledGroups = Collections.singletonList(TestGroup.DEFAULT_GROUP);
-    }
+    Collection<String> enabledGroups = split(System.getProperty(key, TestGroup.DEFAULT_GROUP));
+
     return enabledGroups;
   }
 
@@ -47,6 +50,10 @@ public class TestGroupRule implements TestRule {
 
 
   static boolean isGroupEnabled(Collection<String> enabledGroups, Collection<String> declaredGroups) {
+    if (enabledGroups.contains(TestGroup.ALL_GROUPS)) {
+      return true;
+    }
+
     for (String enabledGroup : enabledGroups) {
       if (declaredGroups.contains(enabledGroup)) {
         return true;

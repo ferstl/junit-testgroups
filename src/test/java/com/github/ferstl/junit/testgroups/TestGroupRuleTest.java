@@ -1,5 +1,19 @@
 package com.github.ferstl.junit.testgroups;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.internal.AssumptionViolatedException;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+
+import com.github.ferstl.junit.testgroups.TestGroupRule.SkipStatement;
+
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
@@ -9,17 +23,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import java.util.Arrays;
-import java.util.Collection;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.internal.AssumptionViolatedException;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-import com.github.ferstl.junit.testgroups.TestGroupRule.SkipStatement;
 
 /**
  * JUnit tests for {@link TestGroupRule}.
@@ -42,6 +45,7 @@ public class TestGroupRuleTest {
     when(this.testGroup.key()).thenReturn(TestGroup.DEFAULT_KEY);
     when(this.testGroup.value()).thenReturn(new String[]{TestGroup.DEFAULT_GROUP});
     this.description = mock(Description.class);
+    when(this.description.getDisplayName()).thenReturn("displayName");
     when(this.description.getAnnotation(TestGroup.class)).thenReturn(this.testGroup);
   }
 
@@ -58,6 +62,21 @@ public class TestGroupRuleTest {
   @Test
   public void implicitDefaultGroup() {
     when(this.testGroup.value()).thenReturn(new String[0]);
+
+    assertEquals(this.statement, this.rule.apply(this.statement, this.description));
+  }
+
+  @Test
+  public void allGroups() {
+    when(this.testGroup.value()).thenReturn(new String[] {"group1,group2"});
+    System.setProperty(TestGroup.DEFAULT_KEY, TestGroup.ALL_GROUPS);
+
+    assertEquals(this.statement, this.rule.apply(this.statement, this.description));
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void noAnnotation() {
+    when(this.description.getAnnotation(TestGroup.class)).thenReturn(null);
 
     assertEquals(this.statement, this.rule.apply(this.statement, this.description));
   }

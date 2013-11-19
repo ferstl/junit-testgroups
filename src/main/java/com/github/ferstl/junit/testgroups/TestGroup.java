@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
 public @interface TestGroup {
   static final String DEFAULT_KEY = "testgroup";
   static final String DEFAULT_GROUP = "default";
+  static final String ALL_GROUPS = "all";
 
   String key() default DEFAULT_KEY;
   String[] value() default DEFAULT_GROUP;
