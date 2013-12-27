@@ -14,7 +14,7 @@ public class TestGroupRule implements TestRule {
 
   @Override
   public Statement apply(Statement base, Description description) {
-    TestGroup testGroup = description.getAnnotation(TestGroup.class);
+    TestGroup testGroup = findTestGroup(description);
 
     if (testGroup == null) {
       return base;
@@ -29,6 +29,18 @@ public class TestGroupRule implements TestRule {
     }
 
     return new SkipStatement(enabledGroups, declaredGroups);
+  }
+
+
+  TestGroup findTestGroup(Description description) {
+    TestGroup testGroup = description.getAnnotation(TestGroup.class);
+
+    // Try the package it the class is not annotated.
+    if (testGroup == null) {
+      testGroup = description.getTestClass().getPackage().getAnnotation(TestGroup.class);
+    }
+
+    return testGroup;
   }
 
 

@@ -6,6 +6,9 @@ import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
+import com.github.ferstl.junit.testgroups.packagetest.PackageTest;
+import com.github.ferstl.junit.testgroups.packagetest.subpackage.SubPackageTest;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -20,6 +23,7 @@ public class IntegrationTest {
   public void after() {
     System.clearProperty(TestGroup.DEFAULT_KEY);
     System.clearProperty(USER_DEFINED_KEY);
+    System.clearProperty(PackageTest.TEST_GROUP_KEY);
   }
 
   @Test
@@ -32,6 +36,23 @@ public class IntegrationTest {
 
   @Test
   public void defaultTestGroupDisabled() {
+    System.setProperty(TestGroup.DEFAULT_KEY, USER_DEFINED_GROUP);
+
+    Result result = JUnitCore.runClasses(DefaultTestGroup.class);
+    assertEquals(1, result.getIgnoreCount());
+    assertEquals(0, result.getFailureCount());
+  }
+
+  @Test
+  public void defaultTestGroupWithoutAnnotationEnabled() {
+    // No system property has to be set to enable the default test group.
+    Result result = JUnitCore.runClasses(DefaultTestGroup.class);
+    assertEquals(0, result.getIgnoreCount());
+    assertEquals(1, result.getFailureCount());
+  }
+
+  @Test
+  public void defaultTestGroupWithoutAnnotationDisabled() {
     System.setProperty(TestGroup.DEFAULT_KEY, USER_DEFINED_GROUP);
 
     Result result = JUnitCore.runClasses(DefaultTestGroup.class);
@@ -78,6 +99,35 @@ public class IntegrationTest {
     assertEquals(1, result.getIgnoreCount());
   }
 
+  @Test
+  public void packageTestDisabled() {
+    Result result = JUnitCore.runClasses(PackageTest.class);
+
+    assertEquals(1, result.getIgnoreCount());
+    assertEquals(0, result.getFailureCount());
+  }
+
+  @Test
+  public void packageTestEnabled() {
+    System.setProperty(PackageTest.TEST_GROUP_KEY, PackageTest.TEST_GROUP_NAME);
+    Result result = JUnitCore.runClasses(PackageTest.class);
+
+    assertEquals(0, result.getIgnoreCount());
+    assertEquals(1, result.getFailureCount());
+  }
+
+  @Test
+  public void subPackageTest() {
+    // Sub packages are not affected of a test group annotation in the parent package.
+    Result result = JUnitCore.runClasses(SubPackageTest.class);
+
+    assertEquals(0, result.getIgnoreCount());
+    assertEquals(1, result.getFailureCount());
+  }
+
+  /**
+   * Test class with the default test group.
+   */
   @TestGroup
   public static class DefaultTestGroup {
     @ClassRule
@@ -87,6 +137,11 @@ public class IntegrationTest {
     public void test() {
       throw new IllegalStateException("boom");
     }
+  }
+
+  public static class DefaultTestGroupWithoutAnnotation {
+    @ClassRule
+    public static TestGroupRule rule = new TestGroupRule();
   }
 
   @TestGroup(USER_DEFINED_GROUP)
