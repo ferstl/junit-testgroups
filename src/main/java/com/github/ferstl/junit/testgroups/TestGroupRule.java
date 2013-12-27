@@ -33,7 +33,7 @@ public class TestGroupRule implements TestRule {
 
 
   static Collection<String> getEnabledTestGroups(String key) {
-    Collection<String> enabledGroups = split(System.getProperty(key, TestGroup.DEFAULT_GROUP));
+    Collection<String> enabledGroups = split(System.getProperty(key));
 
     return enabledGroups;
   }
@@ -45,12 +45,24 @@ public class TestGroupRule implements TestRule {
       return new HashSet<>(Arrays.asList(declaredGroups));
     }
 
-    return Collections.singletonList(TestGroup.DEFAULT_GROUP);
+    return Collections.emptyList();
   }
 
 
+  /**
+   * A test group is enabled if:
+   * <ul>
+   * <li> {@link TestGroup#ALL_GROUPS} is defined</li>
+   * <li> The declared test groups contain at least one defined test group</li>
+   * <li> No test group is declared and no test group is defined.</li>
+   * </ul>
+   * @param enabledGroups Test groups that are enabled for execution.
+   * @param declaredGroups Test groups that are declared in the {@link TestGroup} annotation.
+   * @return
+   */
   static boolean isGroupEnabled(Collection<String> enabledGroups, Collection<String> declaredGroups) {
-    if (enabledGroups.contains(TestGroup.ALL_GROUPS)) {
+    if (enabledGroups.contains(TestGroup.ALL_GROUPS)
+        || (enabledGroups.isEmpty() && declaredGroups.isEmpty())) {
       return true;
     }
 
@@ -65,7 +77,7 @@ public class TestGroupRule implements TestRule {
 
 
   static Collection<String> split(String commaSeparated) {
-    if (commaSeparated == null || commaSeparated.isEmpty()) {
+    if (commaSeparated == null || commaSeparated.trim().isEmpty()) {
       return Collections.emptySet();
     }
 

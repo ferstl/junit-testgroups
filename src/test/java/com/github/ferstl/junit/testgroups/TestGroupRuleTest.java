@@ -47,7 +47,7 @@ public class TestGroupRuleTest {
     this.statement = mock(Statement.class);
     this.testGroup = mock(TestGroup.class);
     when(this.testGroup.key()).thenReturn(TestGroup.DEFAULT_KEY);
-    when(this.testGroup.value()).thenReturn(new String[]{TestGroup.DEFAULT_GROUP});
+    when(this.testGroup.value()).thenReturn(new String[]{});
     this.description = mock(Description.class);
     when(this.description.getDisplayName()).thenReturn("displayName");
     when(this.description.getAnnotation(TestGroup.class)).thenReturn(this.testGroup);
