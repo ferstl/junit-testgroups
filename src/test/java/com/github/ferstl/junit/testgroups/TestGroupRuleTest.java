@@ -2,6 +2,8 @@ package com.github.ferstl.junit.testgroups;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,7 +22,9 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -94,6 +98,38 @@ public class TestGroupRuleTest {
     System.setProperty(TestGroup.DEFAULT_KEY, "customGroup");
 
     assertThat(this.rule.apply(this.statement, this.description), instanceOf(SkipStatement.class));
+  }
+
+  @Test
+  public void groupEnablementAllGroups() {
+    List<String> declaredGroups = Arrays.asList("declaredGroup1", "declaredGroup2");
+    List<String> enabledGroups = Collections.singletonList(TestGroup.ALL_GROUPS);
+
+    assertTrue(TestGroupRule.isGroupEnabled(enabledGroups, declaredGroups));
+  }
+
+  @Test
+  public void groupEnablementDefault() {
+    List<String> declaredGroups = Collections.emptyList();
+    List<String> enabledGroups = Collections.emptyList();
+
+    assertTrue(TestGroupRule.isGroupEnabled(enabledGroups, declaredGroups));
+  }
+
+  @Test
+  public void groupEnablementDeclaredAndEnabled() {
+    List<String> declaredGroups = Arrays.asList("group1", "group2");
+    List<String> enabledGroups = Arrays.asList("group2", "group3");
+
+    assertTrue(TestGroupRule.isGroupEnabled(enabledGroups, declaredGroups));
+  }
+
+  @Test
+  public void groupEnablementDeclaredAndNotEnabled() {
+    List<String> declaredGroups = Arrays.asList("group1", "group2");
+    List<String> enabledGroups = Arrays.asList("group3", "group4");
+
+    assertFalse(TestGroupRule.isGroupEnabled(enabledGroups, declaredGroups));
   }
 
   @Test
