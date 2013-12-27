@@ -74,7 +74,7 @@ public class TestGroupRuleTest {
     assertEquals(this.statement, this.rule.apply(this.statement, this.description));
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void noAnnotation() {
     when(this.description.getAnnotation(TestGroup.class)).thenReturn(null);
 
@@ -96,6 +96,7 @@ public class TestGroupRuleTest {
     assertThat(this.rule.apply(this.statement, this.description), instanceOf(SkipStatement.class));
   }
 
+  @Test
   public void skipStatement() throws Throwable {
     SkipStatement skipStatement = new SkipStatement(Arrays.asList("foo", "bar"), Arrays.asList("baz", "blub"));
 

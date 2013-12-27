@@ -17,7 +17,7 @@ public class TestGroupRule implements TestRule {
     TestGroup testGroup = description.getAnnotation(TestGroup.class);
 
     if (testGroup == null) {
-      throw new IllegalStateException("Test " + description.getDisplayName() + " is not in a test group.");
+      return base;
     }
 
     String key = testGroup.key();
