@@ -10,6 +10,10 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+/**
+ * JUnit rule that evaluates {@link TestGroup} annotations on tests and will skip all tests that do not belong to the
+ * currently enabled group. This rule is supposed to be used as JUnit class rule!
+ */
 public class TestGroupRule implements TestRule {
 
   @Override
