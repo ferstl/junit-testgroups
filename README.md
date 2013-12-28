@@ -49,7 +49,7 @@ First, annotate your tests with `@TestGroup` and declare the group to which the 
 
 A test may also belong to several groups:
 
-    @TestGroup("group1,group2")
+    @TestGroup("group1", "group2")
     public class MyTest {
        @ClassRule
        public static TestGroupRule rule = new TestGroupRule();
