@@ -5,7 +5,5 @@ import org.junit.Test;
 public class SubPackageTest {
 
   @Test
-  public void test() {
-    throw new IllegalStateException("boom");
-  }
+  public void test() {}
 }

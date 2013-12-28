@@ -31,7 +31,7 @@ public class IntegrationTest {
     // No system property has to be set to enable the default test group.
     Result result = JUnitCore.runClasses(DefaultTestGroup.class);
     assertEquals(0, result.getIgnoreCount());
-    assertEquals(1, result.getFailureCount());
+    assertEquals(1, result.getRunCount());
   }
 
   @Test
@@ -40,7 +40,7 @@ public class IntegrationTest {
 
     Result result = JUnitCore.runClasses(DefaultTestGroup.class);
     assertEquals(1, result.getIgnoreCount());
-    assertEquals(0, result.getFailureCount());
+    assertEquals(0, result.getRunCount());
   }
 
   @Test
@@ -48,7 +48,7 @@ public class IntegrationTest {
     // No system property has to be set to enable the default test group.
     Result result = JUnitCore.runClasses(DefaultTestGroup.class);
     assertEquals(0, result.getIgnoreCount());
-    assertEquals(1, result.getFailureCount());
+    assertEquals(1, result.getRunCount());
   }
 
   @Test
@@ -57,14 +57,14 @@ public class IntegrationTest {
 
     Result result = JUnitCore.runClasses(DefaultTestGroup.class);
     assertEquals(1, result.getIgnoreCount());
-    assertEquals(0, result.getFailureCount());
+    assertEquals(0, result.getRunCount());
   }
 
   @Test
   public void userDefinedGroupDisabled() {
     Result result = JUnitCore.runClasses(UserDefinedGroup.class);
     assertEquals(1, result.getIgnoreCount());
-    assertEquals(0, result.getFailureCount());
+    assertEquals(0, result.getRunCount());
   }
 
   @Test
@@ -73,14 +73,14 @@ public class IntegrationTest {
 
     Result result = JUnitCore.runClasses(UserDefinedGroup.class);
     assertEquals(0, result.getIgnoreCount());
-    assertEquals(2, result.getFailureCount());
+    assertEquals(2, result.getRunCount());
   }
 
   @Test
   public void testGroupInheritenceDisabled() {
     Result result = JUnitCore.runClasses(SubClass.class);
     assertEquals(1, result.getIgnoreCount());
-    assertEquals(0, result.getFailureCount());
+    assertEquals(0, result.getRunCount());
   }
 
   @Test
@@ -89,13 +89,13 @@ public class IntegrationTest {
 
     Result result = JUnitCore.runClasses(SubClass.class);
     assertEquals(0, result.getIgnoreCount());
-    assertEquals(1, result.getFailureCount());
+    assertEquals(1, result.getRunCount());
   }
 
   @Test
   public void userDefinedKeyDisabled() {
     Result result = JUnitCore.runClasses(UserDefinedKey.class);
-    assertEquals(0, result.getFailureCount());
+    assertEquals(0, result.getRunCount());
     assertEquals(1, result.getIgnoreCount());
   }
 
@@ -104,7 +104,7 @@ public class IntegrationTest {
     Result result = JUnitCore.runClasses(PackageTest.class);
 
     assertEquals(1, result.getIgnoreCount());
-    assertEquals(0, result.getFailureCount());
+    assertEquals(0, result.getRunCount());
   }
 
   @Test
@@ -113,7 +113,7 @@ public class IntegrationTest {
     Result result = JUnitCore.runClasses(PackageTest.class);
 
     assertEquals(0, result.getIgnoreCount());
-    assertEquals(1, result.getFailureCount());
+    assertEquals(1, result.getRunCount());
   }
 
   @Test
@@ -122,7 +122,7 @@ public class IntegrationTest {
     Result result = JUnitCore.runClasses(SubPackageTest.class);
 
     assertEquals(0, result.getIgnoreCount());
-    assertEquals(1, result.getFailureCount());
+    assertEquals(1, result.getRunCount());
   }
 
   /**
@@ -134,9 +134,7 @@ public class IntegrationTest {
     public static TestGroupRule rule = new TestGroupRule();
 
     @Test
-    public void test() {
-      throw new IllegalStateException("boom");
-    }
+    public void test() {}
   }
 
   public static class DefaultTestGroupWithoutAnnotation {
@@ -150,14 +148,10 @@ public class IntegrationTest {
     public static TestGroupRule rule = new TestGroupRule();
 
     @Test
-    public void test() {
-      throw new IllegalStateException("boom");
-    }
+    public void test() {}
 
     @Test
-    public void test2() {
-      throw new IllegalStateException("boom");
-    }
+    public void test2() {}
 
   }
 
@@ -177,9 +171,7 @@ public class IntegrationTest {
   public static class SubClass extends BaseClass {
 
     @Test
-    public void test() {
-      throw new IllegalStateException("boom");
-    }
+    public void test() {}
   }
 
   /**
@@ -191,8 +183,6 @@ public class IntegrationTest {
     public static TestGroupRule rule = new TestGroupRule();
 
     @Test
-    public void test() {
-      throw new IllegalStateException("boom");
-    }
+    public void test() {}
   }
 }

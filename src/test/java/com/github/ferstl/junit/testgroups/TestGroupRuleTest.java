@@ -41,6 +41,7 @@ public class TestGroupRuleTest {
   private TestGroup testGroup;
   private Description description;
 
+  @SuppressWarnings({"rawtypes", "unchecked"})
   @Before
   public void before() {
     this.rule = new TestGroupRule();
@@ -51,6 +52,7 @@ public class TestGroupRuleTest {
     this.description = mock(Description.class);
     when(this.description.getDisplayName()).thenReturn("displayName");
     when(this.description.getAnnotation(TestGroup.class)).thenReturn(this.testGroup);
+    when(this.description.getTestClass()).thenReturn((Class) getClass());
   }
 
   @After
