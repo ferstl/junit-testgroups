@@ -49,7 +49,6 @@ public class IntegrationTest {
   public void defaultTestGroupEnabled() {
     // No system property has to be set to enable the default test group.
     Result result = JUnitCore.runClasses(DefaultTestGroup.class);
-    assertEquals(0, result.getIgnoreCount());
     assertEquals(1, result.getRunCount());
   }
 
@@ -58,7 +57,6 @@ public class IntegrationTest {
     System.setProperty(TestGroup.DEFAULT_KEY, USER_DEFINED_GROUP);
 
     Result result = JUnitCore.runClasses(DefaultTestGroup.class);
-    assertEquals(1, result.getIgnoreCount());
     assertEquals(0, result.getRunCount());
   }
 
@@ -66,7 +64,6 @@ public class IntegrationTest {
   public void defaultTestGroupWithoutAnnotationEnabled() {
     // No system property has to be set to enable the default test group.
     Result result = JUnitCore.runClasses(DefaultTestGroup.class);
-    assertEquals(0, result.getIgnoreCount());
     assertEquals(1, result.getRunCount());
   }
 
@@ -75,14 +72,12 @@ public class IntegrationTest {
     System.setProperty(TestGroup.DEFAULT_KEY, USER_DEFINED_GROUP);
 
     Result result = JUnitCore.runClasses(DefaultTestGroup.class);
-    assertEquals(1, result.getIgnoreCount());
     assertEquals(0, result.getRunCount());
   }
 
   @Test
   public void userDefinedGroupDisabled() {
     Result result = JUnitCore.runClasses(UserDefinedGroup.class);
-    assertEquals(1, result.getIgnoreCount());
     assertEquals(0, result.getRunCount());
   }
 
@@ -91,14 +86,12 @@ public class IntegrationTest {
     System.setProperty(TestGroup.DEFAULT_KEY, USER_DEFINED_GROUP);
 
     Result result = JUnitCore.runClasses(UserDefinedGroup.class);
-    assertEquals(0, result.getIgnoreCount());
     assertEquals(2, result.getRunCount());
   }
 
   @Test
   public void testGroupInheritenceDisabled() {
     Result result = JUnitCore.runClasses(SubClass.class);
-    assertEquals(1, result.getIgnoreCount());
     assertEquals(0, result.getRunCount());
   }
 
@@ -107,7 +100,6 @@ public class IntegrationTest {
     System.setProperty(TestGroup.DEFAULT_KEY, USER_DEFINED_GROUP);
 
     Result result = JUnitCore.runClasses(SubClass.class);
-    assertEquals(0, result.getIgnoreCount());
     assertEquals(1, result.getRunCount());
   }
 
@@ -115,14 +107,12 @@ public class IntegrationTest {
   public void userDefinedKeyDisabled() {
     Result result = JUnitCore.runClasses(UserDefinedKey.class);
     assertEquals(0, result.getRunCount());
-    assertEquals(1, result.getIgnoreCount());
   }
 
   @Test
   public void packageTestDisabled() {
     Result result = JUnitCore.runClasses(PackageTest.class);
 
-    assertEquals(1, result.getIgnoreCount());
     assertEquals(0, result.getRunCount());
   }
 
@@ -131,7 +121,6 @@ public class IntegrationTest {
     System.setProperty(PackageTest.TEST_GROUP_KEY, PackageTest.TEST_GROUP_NAME);
     Result result = JUnitCore.runClasses(PackageTest.class);
 
-    assertEquals(0, result.getIgnoreCount());
     assertEquals(1, result.getRunCount());
   }
 
@@ -140,7 +129,6 @@ public class IntegrationTest {
     // Sub packages are not affected of a test group annotation in the parent package.
     Result result = JUnitCore.runClasses(SubPackageTest.class);
 
-    assertEquals(0, result.getIgnoreCount());
     assertEquals(1, result.getRunCount());
   }
 
@@ -148,7 +136,6 @@ public class IntegrationTest {
   public void classRuleWithoutTestGroupTest() {
     Result result = JUnitCore.runClasses(ClassRuleWithoutTestGroup.class);
 
-    assertEquals(0, result.getIgnoreCount());
     assertEquals(1, result.getRunCount());
     assertEquals(0, result.getFailureCount());
   }
