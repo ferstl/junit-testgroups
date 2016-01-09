@@ -12,7 +12,7 @@ There are already several tools that allow test grouping:
 
 However, none of these tools worked for us. We are not only using regular JUnit tests but also parameterized tests and Theories. Since these tests require different test runners, JUnit's `Categories` runner is not an option. Spring's `@IfProfileValue` mechanism is also not an option for the same reason and the maven-failsafe-plugin does not integrate well with any IDEs. 
 
-So some people came up with a self implemented solution which relied on an annotation and **subclasses** (!) of all test runners that we have been using so far. That was the point when this project came to live. It tries to achieve the same goals by using JUnit's class rule mechanism instead of subclassing all test runners that someone might use. It works pretty well but is has some pitfalls (see below) and is not very intuitive to use.
+So some people came up with a self implemented solution which relied on an annotation and **subclasses** (!) of all test runners that we have been using so far. That was the point when this project came to live. It tries to achieve the same goals by using JUnit's class rule mechanism instead of subclassing all test runners that someone might use. It works pretty well but is does also have some pitfalls (see below).
 
 
 ### How to use
@@ -26,11 +26,11 @@ So some people came up with a self implemented solution which relied on an annot
       <scope>test</scope>
     </dependency>
     
-    <!-- JUnit will not come transitively with junit-testgrops! -->
+    <!-- JUnit will not come transitively with junit-testgroups! -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
 
@@ -57,7 +57,7 @@ A test may also belong to several groups:
        ...
     }
     
-Tests which don't declare a test group name are in an implicit default group. All tests belonging the default group will run if no test group is defined to be executed (see "Running the Tests" below).
+Tests which don't declare a test group name are in an implicit default group. All tests belonging to the default group will run if no test group is defined (see "Running the Tests" below).
     
     @TestGroup
     public class MyRegularUnitTest {
@@ -65,7 +65,7 @@ Tests which don't declare a test group name are in an implicit default group. Al
       public static TestGroupRule rule = new TestGroupRule();
     }
 
-Instead of defining the same test groups and the class rules over and over again, a more practical approach would be defining abstract test classes for all your supported test groups:
+Instead of defining the same test groups and the class rules over and over again, a more practical approach is defining abstract test classes for all your supported test groups:
 
     @TestGroup("integration")
     public abstract class AbstractIntegrationTest {
@@ -117,6 +117,6 @@ Tests can then be executed with the system property `-Dmykey=integration`.
 - It's possible to run all tests no matter in what group they are
 
 ### The bad Things
-- **All** tests require a `@TestGroup` annotation **and** an instance of `TestGroupRule` as `@ClassRule`. All other tests will be executed any time. This is obviously cumbersome and error prone.
+- **All** tests require a `@TestGroup` annotation **and** an instance of `TestGroupRule` as `@ClassRule`. All other tests will be executed any time.
 - There is no defined execution order of test rules. So if a test is in a test group and uses other test rules, these test rules might get executed even if the test is not supposed to run. You should use `RuleChain`s (with `TestGroupRule` as first rule) in case you are using other test rules.
 - In case your test runner is a subclass of `ParentRunner`, the `#getChildren()` method of your test runner will **always** be executed, no matter if the test class is supposed to be executed.
