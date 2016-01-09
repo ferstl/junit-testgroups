@@ -1,7 +1,7 @@
 # JUnit Test Groups
 *- Divides your JUnit tests into groups which can be executed separately or all at once*
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.ferstl/junit-testgroups/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.ferstl/junit-testgroups)
+[![Build Status](https://travis-ci.org/ferstl/junit-testgroups.svg?branch=master)](https://travis-ci.org/ferstl/junit-testgroups) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.ferstl/junit-testgroups/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.ferstl/junit-testgroups)
 
 ### Background
 In a recent project we wanted to write each test as JUnit test no matter if the tests are real unit tests or longer running integration tests. The reason behind this idea is that everyone should be able to run all tests with maven or directly in the IDE with as less effort as possible. Moreover, we wanted to prevent our CI build and also local Maven builds from executing the integration tests (other CI jobs are executing them). So to make a long story short, we needed a mechanism to group our JUnit tests and to execute these groups of tests independently from each other.
