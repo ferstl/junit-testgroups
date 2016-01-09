@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -62,7 +61,10 @@ public class TestGroupRule implements TestRule {
 
     // Try the package it the class is not annotated.
     if (testGroup == null) {
-      testGroup = description.getTestClass().getPackage().getAnnotation(TestGroup.class);
+      Package pkg = description.getTestClass().getPackage();
+      if (pkg != null) {
+        testGroup = pkg.getAnnotation(TestGroup.class);
+      }
     }
 
     return testGroup;
