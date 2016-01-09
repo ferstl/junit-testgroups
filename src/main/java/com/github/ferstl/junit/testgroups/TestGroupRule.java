@@ -56,7 +56,7 @@ public class TestGroupRule implements TestRule {
   }
 
 
-  TestGroup findTestGroup(Description description) {
+  static TestGroup findTestGroup(Description description) {
     TestGroup testGroup = description.getAnnotation(TestGroup.class);
 
     // Try the package it the class is not annotated.
@@ -100,8 +100,7 @@ public class TestGroupRule implements TestRule {
    * @return
    */
   static boolean isGroupEnabled(Collection<String> enabledGroups, Collection<String> declaredGroups) {
-    if (enabledGroups.contains(TestGroup.ALL_GROUPS)
-        || (enabledGroups.isEmpty() && declaredGroups.isEmpty())) {
+    if (enabledGroups.contains(TestGroup.ALL_GROUPS) || (enabledGroups.isEmpty() && declaredGroups.isEmpty())) {
       return true;
     }
 
