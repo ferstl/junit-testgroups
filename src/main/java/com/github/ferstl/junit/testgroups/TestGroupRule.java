@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import org.junit.internal.AssumptionViolatedException;
+import org.junit.Assume;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -136,9 +136,7 @@ public class TestGroupRule implements TestRule {
 
     @Override
     public void evaluate() throws Throwable {
-
-      throw new AssumptionViolatedException(
-          "None of the test groups " + this.testGroups + " are enabled. Enabled test groups: " + this.enabledGroups);
+      Assume.assumeTrue("None of the test groups " + this.testGroups + " are enabled. Enabled test groups: " + this.enabledGroups, false);
     }
   }
 }
