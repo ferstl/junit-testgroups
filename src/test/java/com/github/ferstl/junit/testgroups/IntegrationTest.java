@@ -26,10 +26,8 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-
 import com.github.ferstl.junit.testgroups.packagetest.PackageTest;
 import com.github.ferstl.junit.testgroups.packagetest.subpackage.SubPackageTest;
-
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -146,6 +144,15 @@ public class IntegrationTest {
     assertEquals(1, result.getRunCount());
   }
 
+  @Test
+  public void classRuleWithoutTestGroupTest() {
+    Result result = JUnitCore.runClasses(ClassRuleWithoutTestGroup.class);
+
+    assertEquals(0, result.getIgnoreCount());
+    assertEquals(1, result.getRunCount());
+    assertEquals(0, result.getFailureCount());
+  }
+
   /**
    * Test class with the default test group.
    */
@@ -200,6 +207,17 @@ public class IntegrationTest {
    */
   @TestGroup(key = USER_DEFINED_KEY, value = USER_DEFINED_GROUP)
   public static class UserDefinedKey {
+    @ClassRule
+    public static TestGroupRule rule = new TestGroupRule();
+
+    @Test
+    public void test() {}
+  }
+
+  /**
+   * This class defines the {@link TestGroupRule} but has no {@link TestGroup} annotation.
+   */
+  public static class ClassRuleWithoutTestGroup {
     @ClassRule
     public static TestGroupRule rule = new TestGroupRule();
 
