@@ -2,4 +2,5 @@
 .idea/
 target/
 *.iml
-database_*.properties
+.classpath
+.project
