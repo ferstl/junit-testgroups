@@ -3,8 +3,8 @@
 
 [![Build Status](https://travis-ci.org/ferstl/junit-testgroups.svg?branch=master)](https://travis-ci.org/ferstl/junit-testgroups) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.ferstl/junit-testgroups/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.ferstl/junit-testgroups)
 
-### Background
-In a recent project we wanted to write each test as JUnit test no matter if the tests are real unit tests or longer running integration tests. The reason behind this idea is that everyone should be able to run all tests with maven or directly in the IDE with as less effort as possible. Moreover, we wanted to prevent our CI build and also local Maven builds from executing the integration tests (other CI jobs are executing them). So to make a long story short, we needed a mechanism to group our JUnit tests and to execute these groups of tests independently from each other.
+## Background
+In a recent project we wanted to write each test as JUnit test no matter if the tests are real unit tests or longer running integration tests. The reason behind this idea is that everyone should be able to run all tests with Maven or directly within the IDE with as less effort as possible. Moreover, we wanted to prevent our CI build and also local Maven builds from executing the integration tests all the time (other CI jobs are executing them). So to make a long story short, we needed a mechanism to group our JUnit tests and to execute these groups of tests independently from each other.
 
 There are already several tools that allow test grouping:
 - JUnit's `Categories` runner
@@ -12,14 +12,14 @@ There are already several tools that allow test grouping:
 - Maven's [Failsafe](http://maven.apache.org/surefire/maven-failsafe-plugin/) plugin
 - ...
 
-However, none of these tools worked for us. We are not only using regular JUnit tests but also parameterized tests and Theories. Since these tests require different test runners, JUnit's `Categories` runner is not an option. Spring's `@IfProfileValue` mechanism is also not an option for the same reason and the maven-failsafe-plugin does not integrate well with any IDEs. 
+However, all of these tools have their disadvantages. We are not only using regular JUnit tests but also parameterized tests and Theories. Since these tests require different test runners, JUnit's `Categories` runner is not an option. Spring's `@IfProfileValue` mechanism is also not an option for the same reason and the maven-failsafe-plugin does not integrate well with IDEs. 
 
-So some people came up with a self implemented solution which relied on an annotation and **subclasses** (!) of all test runners that we have been using so far. That was the point when this project came to live. It tries to achieve the same goals by using JUnit's class rule mechanism instead of subclassing all test runners that someone might use. It works pretty well but is does also have some pitfalls (see below).
+This project tries to achieve the same goals by using JUnit's class rule mechanism. It works pretty well but there are some pitfalls as well (see below).
 
 
-### How to use
+## How to use
 
-#### Dependencies:
+### Dependencies:
 
     <dependency>
       <groupId>com.github.ferstl</groupId>
@@ -83,7 +83,7 @@ Instead of defining the same test groups and the class rules over and over again
     }
 
 
-#### Running the tests
+### Running the tests
 Once your tests are grouped, you can run them by simply defining your test groups to be executed in a system property called `testgroup`:
 - Execute a simple test group: `-Dtestgroup=integration`
 - Execute multiple test groups: `-Dtestgroup=group1,group2`
@@ -92,7 +92,7 @@ Once your tests are grouped, you can run them by simply defining your test group
 When no `testgroup` system property is defined, all tests without an explicitly declared test group will be executed.
     
 
-#### More advanced Stuff
+### More advanced Stuff
 
 Test groups can also be defined on package level. However, the class rule still needs to be defined in your test classes.
 
@@ -112,13 +112,13 @@ In case the system property key `testgroup` does not work for you, you can defin
     
 Tests can then be executed with the system property `-Dmykey=integration`.
 
-### The good Things
+## The good Things
 - Works with all test runners extending `ParentRunner`, which includes all test runners of the JUnit library (`BlockJUnit4ClassRunner`, `Parameterized`, `Theories`, `SpringJunit4ClassRunner`, etc.).
 - Works with Maven **and** in your IDE
 - All tests in the (implicit) default group will run without defining anything
 - It's possible to run all tests no matter in what group they are
 
-### The bad Things
+## The bad Things
 - **All** tests require a `@TestGroup` annotation **and** an instance of `TestGroupRule` as `@ClassRule`. All other tests will be executed any time.
 - There is no defined execution order of test rules. So if a test is in a test group and uses other test rules, these test rules might get executed even if the test is not supposed to run. You should use `RuleChain`s (with `TestGroupRule` as first rule) in case you are using other test rules.
 - In case your test runner is a subclass of `ParentRunner`, the `#getChildren()` method of your test runner will **always** be executed, no matter if the test class is supposed to be executed.
