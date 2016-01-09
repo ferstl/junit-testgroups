@@ -65,8 +65,8 @@
       <optional>true</optional>
       <exclusions>
         <exclusion>
-          <artifactId>hamcrest-core</artifactId>
           <groupId>org.hamcrest</groupId>
+          <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -81,6 +81,12 @@
       <artifactId>mockito-core</artifactId>
       <version>1.10.19</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.hamcrest</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
