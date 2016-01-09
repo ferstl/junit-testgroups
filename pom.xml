@@ -62,6 +62,7 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
+      <optional>true</optional>
       <exclusions>
         <exclusion>
           <artifactId>hamcrest-core</artifactId>
