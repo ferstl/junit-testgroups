@@ -93,13 +93,39 @@ When no `testgroup` system property is defined, all tests without an explicitly 
     
 
 ### More advanced Stuff
+#### Using `TestGroupRule` together with other Test Rules
+JUnit does not make any guarantees in which order test rules are evaluated. Consider this test:
 
+    public class MyMultiRuleTest {
+      @ClassRule
+      public static TestGroupRule testGroupRule = new TestGroupRule();
+      
+      @ClassRule
+      public static TemporaryFolder tempDir = new TemporaryFolder("target");
+      ...
+    }
+
+In this scenario it might happen, that the `tempDir` rule is evaluated before the `testGroupRule` and creates a temporary directory even if the test is not supposed to run.
+To create an order between several `TestRule`s you need to use a `RuleChain`:
+
+    public class MyMultiRuleTest {
+      @ClassRule
+      public static TestRule rules = RuleChain
+          .outerRule(new TestGroupRule())
+          .around(new TemporaryFolder("target"));
+      ...
+    }
+
+This guarantees the `TestGroupRule` to run first.
+
+#### Package Level Grouping
 Test groups can also be defined on package level. However, the class rule still needs to be defined in your test classes.
 
     // package-info.java
     @TestGroup("integration")
     package my.project.integrationtests
 
+#### Custom Test Group Key
 In case the system property key `testgroup` does not work for you, you can define another key:
 
     @TestGroup(key = "mykey", value = "integration")
