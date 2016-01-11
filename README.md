@@ -101,7 +101,7 @@ JUnit does not make any guarantees in which order test rules are evaluated. Cons
       public static TestGroupRule testGroupRule = new TestGroupRule();
       
       @ClassRule
-      public static TemporaryFolder tempDir = new TemporaryFolder("target");
+      public static TemporaryFolder tempDir = new TemporaryFolder();
       ...
     }
 
@@ -112,7 +112,7 @@ To create an order between several `TestRule`s you need to use a `RuleChain`:
       @ClassRule
       public static TestRule rules = RuleChain
           .outerRule(new TestGroupRule())
-          .around(new TemporaryFolder("target"));
+          .around(new TemporaryFolder());
       ...
     }
 
