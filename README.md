@@ -122,7 +122,8 @@ This guarantees the `TestGroupRule` to run first.
 The Spring Framework has it's own JUnit test runner called `SpringJUnit4ClassRunner`. When used together with the `TestGroupRule` this runner will always do some work before any JUnit test rules are executed. So this work is done even if the test is not supposed to run.
 Since version 4.2 of the Spring Framework there is a [rule based alternative](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/integration-testing.html#testcontext-junit4-rules) to the `SpringJUnit4ClassRunner`. This allows it to create a rule `RuleChain`s as described above:
 
-    public class MyMultiRuleTest {
+    @ContextConfiguration
+    public class MySpringTest {
       @ClassRule
       public static TestRule classRules = RuleChain
           .outerRule(new TestGroupRule())
