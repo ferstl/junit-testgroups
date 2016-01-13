@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.ferstl</groupId>
   <artifactId>junit-testgroups</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>JUnit Test Groups</name>
   <description>
     Divides your JUnit tests into groups which can be executed separately or all at once 
@@ -29,7 +29,7 @@
     <connection>scm:git:git@github.com:ferstl/junit-testgroups.git</connection>
     <developerConnection>scm:git:git@github.com:ferstl/junit-testgroups.git</developerConnection>
     <url>${project.url}</url>
-    <tag>HEAD</tag>
+    <tag>junit-testgroups-1.0.1</tag>
   </scm>
 
   <distributionManagement>
