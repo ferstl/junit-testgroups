@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import org.junit.Assume;
+import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -35,6 +36,29 @@ import org.junit.runners.model.Statement;
  * currently enabled group. This rule is supposed to be used as JUnit class rule!
  */
 public class TestGroupRule implements TestRule {
+
+  /**
+   * @deprecated Use one of the static factory methods {@link #create()} or {@link #chain()}.
+   */
+  @Deprecated
+  public TestGroupRule() {}
+
+  /**
+   * Creates an instance of {@link TestGroupRule}.
+   */
+  public static TestGroupRule create() {
+    return new TestGroupRule();
+  }
+
+  /**
+   * Creates a {@link RuleChain} with the {@link TestGroupRule} as outer rule. This is equivalent to:
+   * <pre>
+   * RuleChain.outerRule(TestGroupRule.create());
+   * </pre>
+   */
+  public static RuleChain chain() {
+    return RuleChain.outerRule(create());
+  }
 
   @Override
   public Statement apply(Statement base, Description description) {

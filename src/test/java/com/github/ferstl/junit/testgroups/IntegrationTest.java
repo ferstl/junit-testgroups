@@ -24,8 +24,11 @@ package com.github.ferstl.junit.testgroups;
 import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runners.model.Statement;
 import com.github.ferstl.junit.testgroups.packagetest.PackageTest;
 import com.github.ferstl.junit.testgroups.packagetest.subpackage.SubPackageTest;
 import static org.junit.Assert.assertEquals;
@@ -140,13 +143,21 @@ public class IntegrationTest {
     assertEquals(0, result.getFailureCount());
   }
 
+  @Test
+  public void ruleChainTest() {
+    Result result = JUnitCore.runClasses(RuleChainWithExceptionThrowingRule.class);
+
+    assertEquals(0, result.getRunCount());
+    assertEquals(0, result.getFailureCount());
+  }
+
   /**
    * Test class with the default test group.
    */
   @TestGroup
   public static class DefaultTestGroup {
     @ClassRule
-    public static TestGroupRule rule = new TestGroupRule();
+    public static TestGroupRule rule = TestGroupRule.create();
 
     @Test
     public void test() {}
@@ -154,13 +165,13 @@ public class IntegrationTest {
 
   public static class DefaultTestGroupWithoutAnnotation {
     @ClassRule
-    public static TestGroupRule rule = new TestGroupRule();
+    public static TestGroupRule rule = TestGroupRule.create();
   }
 
   @TestGroup(USER_DEFINED_GROUP)
   public static class UserDefinedGroup {
     @ClassRule
-    public static TestGroupRule rule = new TestGroupRule();
+    public static TestGroupRule rule = TestGroupRule.create();
 
     @Test
     public void test() {}
@@ -177,7 +188,7 @@ public class IntegrationTest {
   @TestGroup(USER_DEFINED_GROUP)
   public static abstract class BaseClass {
     @ClassRule
-    public static TestGroupRule rule = new TestGroupRule();
+    public static TestGroupRule rule = TestGroupRule.create();
   }
 
   /**
@@ -195,7 +206,7 @@ public class IntegrationTest {
   @TestGroup(key = USER_DEFINED_KEY, value = USER_DEFINED_GROUP)
   public static class UserDefinedKey {
     @ClassRule
-    public static TestGroupRule rule = new TestGroupRule();
+    public static TestGroupRule rule = TestGroupRule.create();
 
     @Test
     public void test() {}
@@ -206,7 +217,32 @@ public class IntegrationTest {
    */
   public static class ClassRuleWithoutTestGroup {
     @ClassRule
-    public static TestGroupRule rule = new TestGroupRule();
+    public static TestGroupRule rule = TestGroupRule.create();
+
+    @Test
+    public void test() {}
+  }
+
+  /**
+   * This class contains a rule chain with the {@link TestGroupRule} as outer rule and a second rule that throws an exception.
+   */
+  @TestGroup(USER_DEFINED_GROUP)
+  public static class RuleChainWithExceptionThrowingRule {
+    @ClassRule
+    public static TestRule rule = TestGroupRule.chain()
+        .around(new TestRule() {
+
+          @Override
+          public Statement apply(Statement base, Description description) {
+            return new Statement() {
+
+              @Override
+              public void evaluate() throws Throwable {
+                throw new IllegalStateException("This statement should never be evaluated");
+              }
+            };
+          }
+        });
 
     @Test
     public void test() {}

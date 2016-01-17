@@ -44,7 +44,7 @@ First, annotate your tests with `@TestGroup` and declare the group to which the 
     @TestGroup("integration")
     public class MyIntegrationTest {
        @ClassRule
-       public static TestGroupRule rule = new TestGroupRule();
+       public static TestGroupRule rule = TestGroupRule.create();
        
        ...
     }
@@ -54,7 +54,7 @@ A test may also belong to several groups:
     @TestGroup("group1", "group2")
     public class MyTest {
        @ClassRule
-       public static TestGroupRule rule = new TestGroupRule();
+       public static TestGroupRule rule = TestGroupRule.create();
        
        ...
     }
@@ -64,7 +64,7 @@ Tests which don't declare a test group name are in an implicit default group. Al
     @TestGroup
     public class MyRegularUnitTest {
       @ClassRule
-      public static TestGroupRule rule = new TestGroupRule();
+      public static TestGroupRule rule = TestGroupRule.create();
     }
 
 Instead of defining the same test groups and the class rules over and over again, a more practical approach is defining abstract test classes for all your supported test groups:
@@ -72,7 +72,7 @@ Instead of defining the same test groups and the class rules over and over again
     @TestGroup("integration")
     public abstract class AbstractIntegrationTest {
       @ClassRule
-      public static TestGroupRule rule = new TestGroupRule();
+      public static TestGroupRule rule = TestGroupRule.create();
       
       ...
     }
@@ -98,7 +98,7 @@ JUnit does not make any guarantees in which order test rules are evaluated. Cons
 
     public class MyMultiRuleTest {
       @ClassRule
-      public static TestGroupRule testGroupRule = new TestGroupRule();
+      public static TestGroupRule testGroupRule = TestGroupRule.create();
       
       @ClassRule
       public static TemporaryFolder tempDir = new TemporaryFolder();
@@ -106,12 +106,11 @@ JUnit does not make any guarantees in which order test rules are evaluated. Cons
     }
 
 In this scenario it might happen, that the `tempDir` rule is evaluated before the `testGroupRule` and creates a temporary directory even if the test is not supposed to run.
-To create an order between several `TestRule`s you need to use a `RuleChain`:
+To create an order between several `TestRule`s you need to use a `RuleChain`. `TestGroupRule` provides a convenience factory method for that:
 
     public class MyMultiRuleTest {
       @ClassRule
-      public static TestRule rules = RuleChain
-          .outerRule(new TestGroupRule())
+      public static TestRule rules = TestGroupRule.chain()
           .around(new TemporaryFolder());
       ...
     }
@@ -125,8 +124,7 @@ Since version 4.2 of the Spring Framework there is a [rule based alternative](ht
     @ContextConfiguration
     public class MySpringTest {
       @ClassRule
-      public static TestRule classRules = RuleChain
-          .outerRule(new TestGroupRule())
+      public static TestRule classRules = TestGroupRule.chain()
           .around(new SpringClassRule());
       
       @Rule
@@ -148,7 +146,7 @@ In case the system property key `testgroup` does not work for you, you can defin
     @TestGroup(key = "mykey", value = "integration")
     public class MyIntegrationTest {
       @ClassRule
-      public static TestGroupRule rule = new TestGroupRule();
+      public static TestGroupRule rule = TestGroupRule.create();
       
       ...
     }

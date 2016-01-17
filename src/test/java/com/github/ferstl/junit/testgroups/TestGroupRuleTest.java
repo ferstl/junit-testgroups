@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,9 +33,7 @@ import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-
 import com.github.ferstl.junit.testgroups.TestGroupRule.SkipStatement;
-
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
@@ -65,7 +62,7 @@ public class TestGroupRuleTest {
   @SuppressWarnings({"rawtypes", "unchecked"})
   @Before
   public void before() {
-    this.rule = new TestGroupRule();
+    this.rule = TestGroupRule.create();
     this.statement = mock(Statement.class);
     this.testGroup = mock(TestGroup.class);
     when(this.testGroup.key()).thenReturn(TestGroup.DEFAULT_KEY);

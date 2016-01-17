@@ -23,7 +23,6 @@ package com.github.ferstl.junit.testgroups.packagetest;
 
 import org.junit.ClassRule;
 import org.junit.Test;
-
 import com.github.ferstl.junit.testgroups.TestGroupRule;
 
 public class PackageTest {
@@ -32,7 +31,7 @@ public class PackageTest {
   public static final String TEST_GROUP_NAME = "package";
 
   @ClassRule
-  public static TestGroupRule rule = new TestGroupRule();
+  public static TestGroupRule rule = TestGroupRule.create();
 
   @Test
   public void test() {
