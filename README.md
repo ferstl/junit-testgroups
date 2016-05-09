@@ -24,7 +24,7 @@ This project tries to achieve the same goals by using JUnit's class rule mechani
     <dependency>
       <groupId>com.github.ferstl</groupId>
       <artifactId>junit-testgroups</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
     
