@@ -5,7 +5,7 @@
   <version>1.0.2-SNAPSHOT</version>
   <name>JUnit Test Groups</name>
   <description>
-    Divides your JUnit tests into groups which can be executed separately or all at once 
+    Divides your JUnit tests into groups which can be executed separately or all at once
   </description>
   <url>https://github.com/ferstl/junit-testgroups</url>
   <licenses>
@@ -80,7 +80,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>1.10.19</version>
+      <version>2.2.22</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -149,7 +149,7 @@
           <artifactId>maven-source-plugin</artifactId>
           <version>${maven-source-plugin.version}</version>
         </plugin>
-        
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
